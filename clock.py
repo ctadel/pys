@@ -91,7 +91,7 @@ class Clock:
     def __init__(self,radius):  -> radius is the size of the clock
     """
 
-    def __init__(self,time=None,radius=10,padding=0):
+    def __init__(self,time=None,radius=10,padding=2):
 
         if not time:
             now = datetime.now()
@@ -99,10 +99,12 @@ class Clock:
 
         self.time = time
         self.radius = radius
-        self.A = Grid(x=True,y=True,size=radius+padding)
-        self.S = Grid(x=True,y=False,size=radius+padding)
-        self.C = Grid(x=False,y=True,size=radius+padding)
-        self.T = Grid(x=False,y=False,size=radius+padding)
+        self.padding = padding
+
+        self.A = Grid(x=True,y=True, size=self.radius + self.padding)
+        self.S = Grid(x=True,y=False, size=self.radius + self.padding)
+        self.C = Grid(x=False,y=True, size=self.radius + self.padding)
+        self.T = Grid(x=False,y=False, size=self.radius + self.padding)
 
     @staticmethod
     def degree_to_radians(degree):
@@ -121,7 +123,7 @@ class Clock:
         for radii in range(self.radius):
             radian = Clock.degree_to_radians(hour_angle%90)
             x, y = round(radii*sin(radian)),round(radii*cos(radian))
-            grid._grid[x][y] = '█'
+            grid._grid[x][y] = '#'
 
         return grid,grid._quadrant,transpose_times
 
@@ -133,7 +135,7 @@ class Clock:
         for radii in range(self.radius):
             radian = Clock.degree_to_radians(minute_angle%90)
             x, y = round(radii*sin(radian)),round(radii*cos(radian))
-            grid._grid[x][y] = '■'
+            grid._grid[x][y] = '*'
 
         return grid,grid._quadrant,transpose_times
 
@@ -163,13 +165,22 @@ class Clock:
         for grid,turns in rotation.values():
             grid._grid = Clock.transpose_matrix(grid._grid,turns)
 
+        #for marking border values
+        self.C._grid[0][-1] = '1'; self.A._grid[0][0] = '2'
+        self.T._grid[-1][-1]= '0'; self.S._grid[-1][0] = '6'
+        self.A._grid[-1][-1] = '3'; self.C._grid[-1][0] = '9'
 
+        self.A._grid[-1][0] = self.C._grid[-1][-1] = '▄'
+        self.T._grid[0][-1] = self.S._grid[0][0] = '▀'
+
+        #for printing current time in digital format
+        self.T._grid[-self.padding][-5:-1] = self.time.__str__()
         matrix = ''
         for row_C,row_A in zip(self.C._grid,self.A._grid):
-            matrix += ' '.join(row_C) + ''.join(row_A) + '\n'
+            matrix += ' '.join(row_C) + ' '.join(row_A) + '\n'
 
         for row_T,row_S in zip(self.T._grid,self.S._grid):
-            matrix += ' '.join(row_T) + ''.join(row_S) + '\n'
+            matrix += ' '.join(row_T) + ' '.join(row_S) + '\n'
 
         return matrix
 
