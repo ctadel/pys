@@ -186,8 +186,14 @@ class Clock:
 
 
 if __name__ == "__main__":
-    while(True):
-        os.system('clear')
-        c = Clock()
-        print(c)
-        sleep(1)
+    try:
+        while(True):
+            os.system('clear')
+            c = Clock()
+            print(c)
+            sleep(1)
+    except KeyboardInterrupt:
+        print('\r')
+        exit()
+
+

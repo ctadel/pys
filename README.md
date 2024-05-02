@@ -3,4 +3,4 @@
 python clock.py
 ```
 
-![screenshot](screenshot.png)
+![screenshot](clock_screenshot.png)
