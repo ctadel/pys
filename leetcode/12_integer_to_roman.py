@@ -88,3 +88,5 @@ class Solution:
 
         return roman_string
 
+result = Solution().intToRoman(12)
+print(result)

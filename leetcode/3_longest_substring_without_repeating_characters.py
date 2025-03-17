@@ -75,12 +75,27 @@ class Solution:
                 current_substring = current_substring + letter
 
             else:
-                if longest_substring_length < len(current_substring):
-                    longest_substring_length = len(current_substring)
-
                 current_substring = current_substring[current_substring.find(letter)+1:] + letter
 
             if longest_substring_length < len(current_substring):
                 longest_substring_length = len(current_substring)
 
         return longest_substring_length
+
+
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        if len(s) == 1: return 1
+        max_length = 0
+        start, stop = 0, 1
+        while stop <= len(s) -1:
+            if s[stop] in s[start:stop]:
+                start = start + 1 + s[start:stop].index(s[stop])
+            else:
+                stop += 1
+                max_length = max(max_length, len(s[start:stop]))
+        return max_length
+
+
+s = 'aba'
+print(Solution().lengthOfLongestSubstring(s))
